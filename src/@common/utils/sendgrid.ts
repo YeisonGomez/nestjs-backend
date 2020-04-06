@@ -3,7 +3,7 @@ const sgMail = require('@sendgrid/mail');
 
 export const Templates = {
   VERIFY_FORGOT_PASSWORD: {
-    id: 'd-e8984579932447c6b724de143f074147',
+    id: 'd-ef4594eff68349cd9a41572791c46c36',
     subject: { es: 'Recuperar contraseña', en: 'Recover password' }
   },
   SIGNUP_SUCCESS: {
@@ -28,18 +28,17 @@ export class Sengrid {
         templateId: template.id,
         dynamic_template_data: {
           ...substitutions,
-          subject: template.subject[(substitutions.es ? 'es' : 'en')]
+          language: { [substitutions.lng]: true },
+          subject: template.subject[substitutions.lng]
         }
       }
 
       sgMail.send(msg).then(async data => {
-        console.error('Sendgrid Then', data);
         if (data[0] && data[0].complete)
           resolve({ success: 'OK', ...data })
         else
           resolve({ success: 'ERROR', ...data })
       }).catch(err => {
-        console.error('Sendgrid Catch', err.response.body);
         resolve({ error: 'ERROR', ...err })
       });
     })

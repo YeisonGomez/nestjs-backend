@@ -78,16 +78,12 @@ export class AuthService {
     return await this.getStructureToken(body.email);
   }
 
-  async getStructureToken(email) {
-    return await this.userRepository.findOne({
-      select: ['id', 'email'],
-      relations: ['person', 'client'],
-      where: { email }
-    })
-  }
-
   async requestForgotPassword(email: string) {
-    const user = await this.userRepository.findOne({ where: { email: email } });
+    const user = await this.userRepository.findOne({ 
+      select: ['id'],
+      relations: ['person', 'person.language'],
+      where: { email: email } 
+    });
 
     if (!user)
       return { error: 'USER_NOT_EXIST', detail: 'El usuario no existe' }
@@ -95,16 +91,10 @@ export class AuthService {
     if (user.state === 'inactive')
       return { error: 'USER_INACTIVE', detail: 'El usuario esta inactivo' }
 
-    const person = await this.userRepository.findOne({
-      select: ['id'],
-      relations: ['person', 'person.language'],
-      where: { email }
-    })
-
     const checkCode = randomStringGenerator();
     await this.userRepository.update({ id: user.id }, { code: checkCode })
 
-    return { success: 'OK', payload: { code: checkCode, name: person.person.name, lastname: person.person.lastname, lng: person.person.language.key } }
+    return { success: 'OK', payload: { ...user.person, code: checkCode, lng: user.person.language.key } }
   }
 
   async changePassword(body: ChangePasswordDto) {
@@ -117,10 +107,17 @@ export class AuthService {
       return { error: 'USER_INACTIVE', detail: 'El usuario esta inactivo.' }
 
     body.password = this.cryptoService.encrypt(body.password);
-
     await this.userRepository.update({ id: user.id }, { password: body.password, code: null })
 
     return { success: 'OK' }
+  }
+
+  async getStructureToken(email) {
+    return await this.userRepository.findOne({
+      select: ['id', 'email'],
+      relations: ['person', 'client'],
+      where: { email }
+    })
   }
 
   async validateUser(token: string): Promise<any> {

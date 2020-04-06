@@ -29,8 +29,8 @@ export class AuthController {
 
     await Sendgrid.sendEmail(body.email, Templates.SIGNUP_SUCCESS,
       {
+        lng: body.language,
         clientName: body.name + ' ' + body.lastname,
-        [body.language]: true,
         redirect: this.configService.envConfig.APP_HOST_CLIENT
       })
 
@@ -58,12 +58,10 @@ export class AuthController {
       const user = response.payload;
 
       const sendEmail: any = await Sendgrid.sendEmail(body.email, Templates.VERIFY_FORGOT_PASSWORD, {
+        lng: user.lng,
         name: user.name,
         lastname: user.lastname,
-        subjectName: user.name,
-        es: user.lng === 'es',
-        en: user.lng === 'en',
-        redirect: `${this.configService.app.appHostClient}?form=restore&code=${user.code}`
+        redirect: `${this.configService.app.appHostClient}?code=${user.code}`
       })
 
       if (sendEmail.error)
@@ -82,13 +80,5 @@ export class AuthController {
       return { success: 'OK' }
     } else
       throw new BadRequestException(response);
-  }
-
-  private decodeToken(req) {
-    if (req.headers && req.headers.authorization) {
-      const token = req.headers.authorization.split(" ")[1]
-      return this.jwtService.decode(token);
-    }
-    return undefined;
   }
 }
