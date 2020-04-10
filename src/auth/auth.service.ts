@@ -32,7 +32,7 @@ export class AuthService {
       return { error: "USER_NOT_EXIST", detail: "Tu correo electronico o contraseña no son válidos." }
     else if(!user.client)
       return { error: "IS_NOT_CLIENT", detail: "Este usuario no es un cliente." }
-    else if(user.client.state !== 'active')
+    else if(user.client.state === 'inactive')
       return { error: "CLIENT_INACTIVE", detail: "Cliente inactivo." }
     else if (user.state === 'inactive')
       return { error: "USER_INACTIVE", detail: "Usuario inactivo." }
