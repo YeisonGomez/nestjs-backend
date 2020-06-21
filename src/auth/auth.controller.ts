@@ -1,12 +1,13 @@
 import { Controller, Post, UnauthorizedException, Body, Inject, UseGuards, Request, BadRequestException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
+
 import { AuthService } from './auth.service';
 import { signup } from './dto/signup';
 import { LoginDto } from './dto/login.dto';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 import { EmailDto } from './dto/email.dto';
-import Sendgrid, { Templates } from '../@common/utils/sendgrid';
+import Sendgrid, { Templates } from '../@common/services/sendgrid';
 
 @Controller('auth')
 export class AuthController {

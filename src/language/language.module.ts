@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { LanguageController } from './language.controller';
 import { LanguageService } from './language.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { language } from '../entities/language';
+import { language } from '../entities/users/language';
 
 @Module({
   imports: [

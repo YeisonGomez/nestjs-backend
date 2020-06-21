@@ -2,11 +2,13 @@ import { Injectable, Body } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { user } from '../entities/user';
-import { person } from '../entities/person';
-import { client } from '../entities/client';
-import { language } from '../entities/language';
 import { Update } from './dto/update';
+import { user } from '../entities/users/user';
+import { person } from '../entities/users/person';
+import { client } from '../entities/users/client';
+import { language } from '../entities/users/language';
+import { userRol } from '../entities/users/userRol';
+import { userPermission } from '../entities/users/userPermission';
 
 @Injectable()
 export class UserService {
@@ -16,18 +18,32 @@ export class UserService {
     @InjectRepository(person, 'users') private readonly personRepository: Repository<person>,
     @InjectRepository(client, 'users') private readonly clientRepository: Repository<client>,
     @InjectRepository(language, 'users') private readonly languageRepository: Repository<language>,
+    @InjectRepository(userRol, 'users') private readonly userRolRepository: Repository<userRol>,
+    @InjectRepository(userPermission, 'users') private readonly userPermissionRepository: Repository<userPermission>
   ) { }
 
   async getPermissions(id: number) {
     const client = await this.clientRepository.findOne({
       select: ['id', 'state'],
-      where: { user: { id }, state: 'active' }
+      where: { user: { id } }
     })
 
     if(client)
-      return ['client']
+      return { rols: ['client'], state: client.state }
 
-    return undefined
+    let rols: any = await this.userRolRepository.find({
+      relations: ['rol'],
+      where: { user: { id }, state: 'active' }
+    })
+    rols = rols.map(item => ({ ...item.rol }))
+    
+    let permissions: any = await this.userPermissionRepository.find({
+      relations: ['permission'],
+      where: { user: { id }, state: 'active' }
+    })
+    permissions = permissions.map(item => ({ ...item.permission }))
+
+    return { rols, permissions }
   }
 
   async getProfile(id: number) {
@@ -73,5 +89,9 @@ export class UserService {
     });
 
     return { success: 'OK' }
+  }
+
+  async getClientsAll() {
+    return "No se porque entro"
   }
 }

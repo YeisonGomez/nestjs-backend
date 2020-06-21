@@ -23,10 +23,6 @@ export class signup {
     @Length(1, 3)
     language: string;
 
-    @IsOptional()
-    @Length(3, 80)
-    accountXM: string;
-
     @IsEmail()
     email: string;
 

@@ -40,7 +40,7 @@ export class ConfigService {
 	}
 
 	get orm_config(): any {
-		const pathEntities = [(this.isLocal ? 'dist/entities/*.js' : 'src/entities/*.ts')];
+		const pathEntities = [(this.isLocal ? 'dist/entities/**/*.js' : 'src/entities/**/*.ts')];
 		
 		const configDefault = {
 			type: this.envConfig.DB_TYPE,

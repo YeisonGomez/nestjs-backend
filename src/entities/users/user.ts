@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, Unique, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { person } from "./person";
 import { client } from "./client";
+import { userRol } from "./userRol";
 
 @Entity("user", { schema: 'users' })
 @Unique(["email"])
@@ -32,5 +33,8 @@ export class user {
 
     @OneToOne(type => client, client => client.user)
     client: client;
+
+    @OneToMany(type => userRol, userRol => userRol.user)
+    rols: userRol;
 
 }

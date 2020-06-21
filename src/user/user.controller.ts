@@ -1,7 +1,10 @@
 import { Controller, Request, Get, Body, Put, UseGuards, UnauthorizedException } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
 import { UserService } from './user.service';
 import { Update } from './dto/update';
-import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../@common/decorators/roles.decorator';
+import { Permissions } from '../@common/decorators/permissions.decorator';
 
 @Controller('user')
 export class UserController {
@@ -29,5 +32,13 @@ export class UserController {
   @UseGuards(AuthGuard('bearer'))
   async profileUpdate(@Request() req, @Body() body: Update) {
     return await this.userService.profileUpdate(req.user.id, body);
+  }
+
+  @Get('/clients-all')
+  @Roles('admin')
+  @Permissions('admin_permissions')
+  @UseGuards(AuthGuard('bearer'))
+  async getClientsAll() {
+    return await this.userService.getClientsAll();
   }
 }

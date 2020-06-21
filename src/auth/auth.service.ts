@@ -1,22 +1,23 @@
-import { Injectable, Inject, Body } from '@nestjs/common';
+import { Injectable, Inject, Body, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getManager } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
-import * as moment from 'moment';
 
-import { person } from '../entities/person';
-import { client } from '../entities/client';
-import { user } from '../entities/user';
+import { person } from '../entities/users/person';
+import { client } from '../entities/users/client';
+import { user } from '../entities/users/user';
 import { LoginDto } from './dto/login.dto';
 import { signup } from './dto/signup';
 import { ChangePasswordDto } from './dto/changePassword.dto';
-import { language } from '../entities/language';
+import { language } from '../entities/users/language';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
 
   constructor(
+    private readonly userService: UserService,
     @Inject('CryptoService') private readonly cryptoService,
     @InjectRepository(user, 'users') private readonly userRepository: Repository<user>,
     @InjectRepository(person, 'users') private readonly personRepository: Repository<person>,
@@ -122,6 +123,8 @@ export class AuthService {
 
   async validateUser(token: string): Promise<any> {
     let payload: any = this.jwtService.decode(token);
+    console.log(payload);
+    
     if (payload) {
       const user = await this.userRepository.createQueryBuilder('user')
         .select(['user.id', 'user.email'])
@@ -129,9 +132,9 @@ export class AuthService {
         .where('user.email = :email', { email: payload.email })
         .getOne()
 
-      //const permissions = await this.userService.getPermissions(user.id)
+      const permissionsAndRols = await this.userService.getPermissions(user.id)
 
-      return { ...user }
+      return { ...user, ...permissionsAndRols }
     }
 
     return false;

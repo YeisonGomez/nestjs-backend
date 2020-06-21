@@ -15,8 +15,4 @@ export class language {
 
     @OneToMany(type => person, person => person.language)
     person: person;
-
-    
-
-
 }
