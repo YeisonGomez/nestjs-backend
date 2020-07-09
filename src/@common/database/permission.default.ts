@@ -1,21 +1,27 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { permission } from '../../entities/users/permission';
+
+import { Permission } from '../../entities/users/permission.entity';
+
+const PERMISSIONS = [
+  { key: 'admin_users', name: 'Administrar usuarios' }
+]
 
 export class PermissionDatabaseDefault {
-
   constructor(
-    @InjectRepository(permission, 'users') private readonly repository: Repository<permission>
+    @InjectRepository(Permission, 'users') 
+    private readonly repository: Repository<Permission>
   ) {
-    this.create({ key: 'admin_users', name: 'Administrar usuarios' })
+    PERMISSIONS.map(permission => this.create(permission))
   }
 
   async create(_object){
-    const _new = new permission(_object)
     const isExist = await this.repository.findOne({ where: { key: _object.key }})
-
+    
     if(isExist)
       return 
+    
+    const _new = this.repository.create(_object)
 
     return this.repository.save(_new)
   }

@@ -1,25 +1,28 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { language } from '../../entities/users/language';
+
+import { Language } from '../../entities/users/language.entity';
+
+const LANGUAGES = [
+  { key: 'es', name: 'Español' },
+  { key: 'en', name: 'Ingles' }
+]
 
 export class LanguageDatabaseDefault {
-
   constructor(
-    @InjectRepository(language, 'users') private readonly repository: Repository<language>
+    @InjectRepository(Language, 'users') 
+    private readonly repository: Repository<Language>
   ) {
-    this.create({ key: 'es', name: 'Español' })
-    this.create({ key: 'en', name: 'Ingles' })
+    LANGUAGES.map(language => this.create(language))
   }
 
   async create(_object){
-    const _new = new language()
-    _new.key = _object.key
-    _new.name = _object.name
-
     const isExist = await this.repository.findOne({ where: { key: _object.key }})
 
     if(isExist)
       return 
+
+    const _new = this.repository.create(_object)
 
     return this.repository.save(_new)
   }

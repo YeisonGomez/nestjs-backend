@@ -1,20 +1,33 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_GUARD } from '@nestjs/core';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
-import { InstanceConfigService } from './@common/config/config.service';
-import { CommonModule } from './@common/common.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/user.module';
-import { LanguageModule } from './language/language.module';
+import { CommonModule } from './@common/common.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
+import { LanguageModule } from './modules/language/language.module';
 import { RolesGuard } from './@common/guards/roles.guard';
 import { PermissionGuard } from './@common/guards/permissions.guard';
+import appConfig from './@common/config/app.config';
+import sendgridConfig from './@common/config/sendgrid.config';
+import typeormConfig from './@common/config/typeorm.config';
+import gcsConfig from './@common/config/gcs.config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(InstanceConfigService.orm_config.users),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env.example',
+      load: [appConfig, sendgridConfig, typeormConfig, gcsConfig]
+    }),
+    TypeOrmModule.forRootAsync({
+      inject:[ConfigService],
+      useFactory: (configService: ConfigService) => configService.get('typeorm.users'),
+      name: 'users' 
+    }),
     CommonModule,
     AuthModule,
     UserModule,
@@ -27,5 +40,5 @@ import { PermissionGuard } from './@common/guards/permissions.guard';
     { provide: APP_GUARD, useClass: PermissionGuard },
   ],
 })
-export class AppModule {
-}
+
+export class AppModule { }

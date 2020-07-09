@@ -1,17 +1,26 @@
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
-import ConfigService from '../config/config.service';
+import { ConfigService } from '@nestjs/config';
+import { Inject } from '@nestjs/common';
 
 const { Storage } = require('@google-cloud/storage');
 const storage = new Storage();
-const bucket = storage.bucket(ConfigService.gcp.bucket);
+//export const bucket = storage.bucket(ConfigService.gcp.bucket);
 
 export default class MulterGoogleCloudStorage {
 
   private options;
+  private bucket;
 
-  constructor(options?: { acl?: string }) {
-    options = options || {};
+  constructor(
+    options?: { acl?: string },
+    @Inject('ConfigService')
+    private readonly configService?: ConfigService,
+  ) {
+    this.options = options || {};
+    this.bucket = storage.bucket(configService.get('gcs.bucket'))
   }
+
+  getBucket = () => this.bucket 
 
   getFilename(req, file, cb) {
     cb(null, `${randomStringGenerator()}_${file.originalname}`);
@@ -28,13 +37,13 @@ export default class MulterGoogleCloudStorage {
       this.getFilename(req, file, (err, filename) => {
         if (err) return cb(err);
 
-        const gcFile = bucket.file(filename);
+        const gcFile = this.bucket.file(filename);
 
         file.stream.pipe(
           gcFile.createWriteStream({ predefinedAcl: this.options }))
           .on('error', (err) => cb(err))
           .on('finish', (file) => cb(null, {
-            path: `https://${bucket.name}.storage.googleapis.com/${filename}`,
+            path: `https://${this.bucket.name}.storage.googleapis.com/${filename}`,
             filename: filename
           })
           );
@@ -43,9 +52,11 @@ export default class MulterGoogleCloudStorage {
     })
   }
 
-  _removeFile = (req, file, cb) => removeFile(file.filename);
+  _removeFile = (filename) => {
+    this.bucket.file(filename).delete()
+  };
 }
 
-export const removeFile = (filename) => {
+/*export const removeFile = (filename) => {
   bucket.file(filename).delete();
-}
+}*/

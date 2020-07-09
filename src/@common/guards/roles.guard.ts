@@ -1,6 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { PassportSerializer } from '@nestjs/passport';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -13,10 +12,6 @@ export class RolesGuard implements CanActivate {
     }
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-
-    console.log("gaurds", roles);
-    
-    console.log(user);
     
     const hasRole = () => user.rols.some((role) => !!roles.find((item) => item === role));
     return user && user.rols && hasRole();

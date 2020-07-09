@@ -1,5 +1,7 @@
 import * as crypto from 'crypto';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class CryptoService{
 
 	encrypt(text){
