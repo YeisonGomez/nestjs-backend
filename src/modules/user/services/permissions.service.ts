@@ -5,6 +5,7 @@ import { Repository } from "typeorm";
 import { Client } from "../../../entities/users/client.entity";
 import { UserRole } from "../../../entities/users/userRole.entity";
 import { UserPermission } from "../../../entities/users/userPermission.entity";
+import { States } from "src/entities/enums/states.enum";
 
 @Injectable()
 export class PermissionsService {
@@ -15,27 +16,33 @@ export class PermissionsService {
   ){}
 
   async getPermissions(id: number) {
+
     const client = await this.clientRepository.findOne({
       select: ['id', 'state'],
       where: { user: { id } }
     })
 
     if(client)
-      return { rols: ['client'], state: client.state }
+      return { roles: ['client'], state: client.state }
 
-    let rols: any = await this.userRolRepository.find({
-      relations: ['rol'],
-      where: { user: { id }, state: 'active' }
-    })
-    rols = rols.map(item => ({ ...item.rol }))
+    let roles: any = await this.userRolRepository.createQueryBuilder('roles')
+      .innerJoin('roles.user', 'user', 'user.state = :stat', { stat: States.Active })
+      .innerJoinAndSelect('roles.role', 'role')
+      .where('roles.state = :state' , { state: States.Active })
+      .getMany()
+
+
+    let permissions: any = await this.userPermissionRepository.createQueryBuilder('permissions')
+      .innerJoin('permissions.user', 'user', 'user.state = :stat', { stat: States.Active })
+      .innerJoinAndSelect('permissions.permission', 'permission', 'permission.state = :stat', { stat: States.Active })
+      .where('permissions.state = :state', { state: States.Active })
+      .getMany()
+
+    roles = roles.map(roles => roles.role.key )
+    permissions = permissions.map(permissions => permissions.permission.key)
     
-    let permissions: any = await this.userPermissionRepository.find({
-      relations: ['permission'],
-      where: { user: { id }, state: 'active' }
-    })
-    permissions = permissions.map(item => ({ ...item.permission }))
-
-    return { rols, permissions }
+    return { roles, permissions }
+  
   }
 
 }

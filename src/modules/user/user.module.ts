@@ -21,7 +21,8 @@ import { ProfileService } from './services/profile.service';
     FindService,
     PermissionsService,
     ProfileService
-  ]
+  ],
+  exports: [PermissionsService]
 })
 export class UserModule {
 }

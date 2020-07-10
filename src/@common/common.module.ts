@@ -12,11 +12,13 @@ import { PermissionDatabaseDefault } from "./database/permission.default";
 import { RolDatabaseDefault } from "./database/role.default";
 import { LanguageDatabaseDefault } from "./database/language.default";
 import { TokenService } from "./services/token.service";
+import { UserModule } from "../modules/user/user.module";
 
 @Global()
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Permission, Role, Language], 'users')
+    TypeOrmModule.forFeature([User, Permission, Role, Language], 'users'),
+    UserModule
   ],
   providers: [
     CryptoService,

@@ -10,8 +10,6 @@ export interface TokenJwt {
   email: string,
   person: object,
   client: object,
-  roles: object,
-  permissions: object,
   iat?: Date
 }
 
@@ -27,8 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  async validate(token: TokenJwt) {
-    await this.tokenService.validateToken(token);
-    return token;
+  validate(token: TokenJwt) {
+    return this.tokenService.validateToken(token);
   }
 }
