@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { User } from "../../entities/users/user.entity";
-import { States } from "src/entities/enums/states.enum";
+import { States } from "../../entities/enums/states.enum";
 import { TokenJwt } from "../strategys/jwt.strategy";
 
 @Injectable()
@@ -13,18 +13,14 @@ export class TokenService {
   ){}
 
   serializeToken = async (email) => {
-    /*const user = await this.userRepository.findOne({
-      select: ['id', 'email'],
-      relations: ['person', 'client'],
-      where: { email }
-    })*/
-
     const user = await this.userRepository.createQueryBuilder('user')
       .select(['user.id', 'user.email'])
       .innerJoinAndSelect('user.person', 'person')
       .innerJoinAndSelect('user.client', 'client')
-      .leftJoinAndSelect('user.roles', 'roles')
-      .leftJoinAndSelect('user.permissions', 'permissions')
+      .leftJoinAndSelect('user.roles', 'roles', 'roles.state = :stat', { stat: States.Active })
+      .leftJoinAndSelect('roles.role', 'role', 'role.state = :stat', { stat: States.Active })
+      .leftJoinAndSelect('user.permissions', 'permissions', 'permissions.state = :stat', { stat: States.Active })
+      .leftJoinAndSelect('permissions.permission', 'permission', 'permission.state = :stat', { stat: States.Active })
       .where('user.email = :email AND user.state = :state', { email, state: States.Active })
       .getOne()
 
@@ -33,29 +29,21 @@ export class TokenService {
       email: user.email,
       client: user.client,
       person: user.person,
-      roles: user.roles,
-      permissions: user.permissions,
+      roles: user.roles.map(roles => roles.role.key),
+      permissions: user.permissions.map(permissions => permissions.permission.key),
     }
 
     return token
   }
 
-  async validateToken(token: any): Promise<any> {
-    //let payload: any = this.jwtService.decode(token);
-    console.log(token);
+  async validateToken(token: TokenJwt): Promise<any> {
+    const { email, id } = token
     
-    /*if (payload) {
-      const user = await this.userRepository.createQueryBuilder('user')
-        .select(['user.id', 'user.email'])
-        .innerJoinAndSelect('user.person', 'person')
-        .where('user.email = :email', { email: payload.email })
-        .getOne()
-
-      const permissionsAndRols = await this.userService.getPermissions(user.id)
-
-      return { ...user, ...permissionsAndRols }
+    const user = await this.userRepository.findOne({ id, email, state: States.Active })
+    if(!user){
+      throw new UnauthorizedException('invalid or expire token')
     }
 
-    return false;*/
+    return true
   }
 }

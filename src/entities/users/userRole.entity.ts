@@ -4,7 +4,7 @@ import { User } from "./user.entity";
 import { Role } from "./role.entity";
 import { States } from '../enums/states.enum'
 
-@Entity("user_rol", { schema: "users" })
+@Entity("user_role", { schema: "users" })
 export class UserRole {
 
   @PrimaryGeneratedColumn({ type: "bigint" })
@@ -26,6 +26,6 @@ export class UserRole {
     role => role.id, 
     { onDelete: 'CASCADE', onUpdate: 'CASCADE' }
   )
-  @JoinColumn({ name: 'fk_rol' })
-  rol: Role;
+  @JoinColumn({ name: 'fk_role' })
+  role: Role;
 }

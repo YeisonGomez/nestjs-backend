@@ -8,6 +8,9 @@ import { Person } from "../../../entities/users/person.entity";
 import { Client } from "../../../entities/users/client.entity";
 import { TokenService } from "../../../@common/services/token.service";
 import { Signup } from "../dto/signup.dto";
+import { UserRole } from "src/entities/users/userRole.entity";
+import { Role } from "src/entities/users/role.entity";
+import { Roles } from "src/@common/constants/role.constant";
 
 @Injectable()
 export class SignUpService {
@@ -16,6 +19,8 @@ export class SignUpService {
     @InjectRepository(Language, 'users') private readonly languageRepository: Repository<Language>,
     @InjectRepository(Person, 'users') private readonly personRepository: Repository<Person>,
     @InjectRepository(Client, 'users') private readonly clientRepository: Repository<Client>,
+    @InjectRepository(Role, 'users') private readonly roleRepository: Repository<Role>,
+    @InjectRepository(UserRole, 'users') private readonly rolesRepository: Repository<UserRole>, 
     private readonly tokenService: TokenService,
   ){}
 
@@ -36,6 +41,13 @@ export class SignUpService {
         email: body.email,
         password: body.password
       }));
+
+      const role = await this.roleRepository.findOne({ key: Roles.CLIENT })
+
+      await entityManager.save(this.rolesRepository.create({
+        role,
+        user
+      }))
 
       await entityManager.save(this.personRepository.create({
         name: body.name,

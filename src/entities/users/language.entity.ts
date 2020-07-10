@@ -6,18 +6,18 @@ import { States } from "../enums/states.enum";
 @Entity("language", { schema: "users" })
 export class Language {
 
-    @PrimaryGeneratedColumn({ type: "bigint" })
-    id: number;
-  
-    @Column("character varying", { nullable: true, length: 50 })
-    name: string;
+  @PrimaryGeneratedColumn({ type: "bigint" })
+  id: number;
 
-    @Column("character varying", { nullable: true, length: 50 })
-    key: string;
+  @Column("character varying", { nullable: true, length: 50 })
+  name: string;
 
-    @Column("enum", { enum: States, default: States.Active })
-    state: States
+  @Column("character varying", { nullable: true, length: 50 })
+  key: string;
 
-    @OneToMany(type => Person, person => person.language)
-    persons: Person[];
+  @Column("enum", { enum: States, default: States.Active })
+  state: States
+
+  @OneToMany(type => Person, person => person.language)
+  persons: Person[];
 }

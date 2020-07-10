@@ -19,7 +19,7 @@ export class Role {
   @Column("enum", { enum: States, default: States.Active })
   state: States
 
-  @OneToMany(type => UserRole, userRole => userRole.rol)
+  @OneToMany(type => UserRole, userRole => userRole.role)
   users: UserRole[];
 
 }

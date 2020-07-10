@@ -47,25 +47,25 @@ export class AuthController {
         redirect: this.configService.get('app.appHostClient')
       })
 
-    return { success: 'OK', token: this.jwtService.sign({ ...response }) }
+    return { success: 'OK', token: await this.jwtService.sign({ ...response }) }
   }
 
   @Post('/login')
   async login(@Body() body: Login) {
     body.email = body.email.toLowerCase()
     body.password = this.cryptoService.encrypt(body.password);
-    let response: any = await this.loginService.login(body);
+    const response: any = await this.loginService.login(body);
 
     if (response.error)
       throw new UnauthorizedException(response);
 
-    return { token: this.jwtService.sign({ ...response }) }
+    return { success: 'OK', token: await this.jwtService.sign({ ...response }) }
   }
 
   @Post('/request-forgot-password')
   async requestForgotPassword(@Body() body: Email) {
     body.email = body.email.toLowerCase()
-    let response: any = await this.recoverPasswordService.requestForgotPassword(body.email);
+    const response: any = await this.recoverPasswordService.requestForgotPassword(body.email);
 
     if (response.success) {
       const user = response.payload;
@@ -74,7 +74,7 @@ export class AuthController {
         lng: user.lng,
         name: user.name,
         lastname: user.lastname,
-        redirect: `${this.configService.get('app.appGostClient')}?code=${user.code}`
+        redirect: `${this.configService.get('app.appHostClient')}?code=${user.code}`
       })
 
       if (sendEmail.error)
@@ -85,9 +85,9 @@ export class AuthController {
       throw new BadRequestException(response);
   }
 
-  @Post('forgot-password')
+  @Post('/forgot-password')
   async changePassword(@Body() body: ChangePassword) {
-    let response: any = await this.recoverPasswordService.changePassword(body);
+    const response: any = await this.recoverPasswordService.changePassword(body);
 
     if (response.success) {
       return { success: 'OK' }

@@ -11,7 +11,7 @@ import { Client } from '../../entities/users/client.entity';
 import { Language } from '../../entities/users/language.entity';
 import { UserRole } from '../../entities/users/userRole.entity';
 import { UserPermission } from '../../entities/users/userPermission.entity';
-import { UserService } from '../user/user.service';
+import { Role } from '../../entities/users/role.entity';
 import { SignUpService } from './services/signup.service';
 import { LoginService } from './services/login.service';
 import { RecoverPasswordService } from './services/recoverPassword.service';
@@ -24,13 +24,14 @@ import { RecoverPasswordService } from './services/recoverPassword.service';
       Client, 
       Language, 
       UserRole, 
+      Role,
       UserPermission
     ], 'users'),
     JwtModule.registerAsync({ 
       inject: [ConfigService], 
       useFactory: (configService: ConfigService) => ({
         secret: configService.get('JWT_KEY'),
-        signOptions: { expiresIn: '15d' } //enviroment
+        signOptions: { expiresIn: configService.get('JWT_EXPIRE') }
       })
     })
   ],
@@ -40,7 +41,6 @@ import { RecoverPasswordService } from './services/recoverPassword.service';
     SignUpService,
     LoginService,
     RecoverPasswordService, 
-    UserService
   ]
 })
 export class AuthModule { }

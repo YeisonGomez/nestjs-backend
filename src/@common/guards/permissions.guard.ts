@@ -11,7 +11,7 @@ export class PermissionGuard implements CanActivate {
       return true;
     }
     const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    const { user } = request
     
     const hasPermission = () => user.permissions.some((permission) => !!permissions.find((item) => item === permission));
     return user && user.permissions && hasPermission();
