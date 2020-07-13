@@ -1,15 +1,12 @@
-import MulterGoogleCloudStorage from './google-cloud-storage';
+import MulterGoogleCloudStorage, { removeFile as GCSRemoveFile } from './google-cloud-storage';
 
 export class Multer{
 
-	private storage = new MulterGoogleCloudStorage({ acl: 'publicread' })
-
-	storageGCS = () => ({ storage: this.storage } )
+	storageGCS = (path: string) => ({ storage: new MulterGoogleCloudStorage({ acl: 'publicread' }, path )})
 
 	removeFile(url: string){
 		return new Promise((resolve, reject) => {
-			this.storage._removeFile(url.split('/')[3])
-			//GCSRemoveFile(url.split('/')[3]);
+			GCSRemoveFile(url.split('/')[3]);
 			resolve();
 		});
 	}

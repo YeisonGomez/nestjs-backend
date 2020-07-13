@@ -1,29 +1,27 @@
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
-import { ConfigService } from '@nestjs/config';
-import { Inject } from '@nestjs/common';
+import { join } from 'path';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Storage } = require('@google-cloud/storage');
-const storage = new Storage();
-//export const bucket = storage.bucket(ConfigService.gcp.bucket);
+const storage = new Storage({
+  /*projectId: 'your_project_id',
+  keyFilename: join(__dirname, '../../../src/@common', 'your_project.json')*/
+});
+
+const bucket = storage.bucket('example-template');
 
 export default class MulterGoogleCloudStorage {
 
   private options;
-  private bucket;
+  private path
 
-  constructor(
-    options?: { acl?: string },
-    @Inject('ConfigService')
-    private readonly configService?: ConfigService,
-  ) {
-    this.options = options || {};
-    this.bucket = storage.bucket(configService.get('gcs.bucket'))
+  constructor( options?: { acl?: string }, path?: string ) {
+    options = options || {};
+    this.path = path
   }
 
-  getBucket = () => this.bucket 
-
   getFilename(req, file, cb) {
-    cb(null, `${randomStringGenerator()}_${file.originalname}`);
+    cb(null, `${this.path}/${randomStringGenerator()}_${file.originalname}`);
   }
 
   getDestination(req, file, cb) {
@@ -37,13 +35,13 @@ export default class MulterGoogleCloudStorage {
       this.getFilename(req, file, (err, filename) => {
         if (err) return cb(err);
 
-        const gcFile = this.bucket.file(filename);
+        const gcFile = bucket.file(filename);
 
         file.stream.pipe(
           gcFile.createWriteStream({ predefinedAcl: this.options }))
           .on('error', (err) => cb(err))
           .on('finish', (file) => cb(null, {
-            path: `https://${this.bucket.name}.storage.googleapis.com/${filename}`,
+            path: `https://${bucket.name}.storage.googleapis.com/${filename}`,
             filename: filename
           })
           );
@@ -52,11 +50,9 @@ export default class MulterGoogleCloudStorage {
     })
   }
 
-  _removeFile = (filename) => {
-    this.bucket.file(filename).delete()
-  };
+  _removeFile = (req, file, cb) => removeFile(file.filename)
 }
 
-/*export const removeFile = (filename) => {
+export const removeFile = (filename) => {
   bucket.file(filename).delete();
-}*/
+}
