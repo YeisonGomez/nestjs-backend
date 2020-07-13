@@ -1,5 +1,4 @@
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
-import { join } from 'path';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Storage } = require('@google-cloud/storage');
