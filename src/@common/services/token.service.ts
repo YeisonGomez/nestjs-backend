@@ -19,10 +19,6 @@ export class TokenService {
       .select(['user.id', 'user.email'])
       .innerJoinAndSelect('user.person', 'person')
       .innerJoinAndSelect('user.client', 'client')
-      .leftJoinAndSelect('user.roles', 'roles', 'roles.state = :stat', { stat: States.Active })
-      .leftJoinAndSelect('roles.role', 'role', 'role.state = :stat', { stat: States.Active })
-      .leftJoinAndSelect('user.permissions', 'permissions', 'permissions.state = :stat', { stat: States.Active })
-      .leftJoinAndSelect('permissions.permission', 'permission', 'permission.state = :stat', { stat: States.Active })
       .where('user.email = :email AND user.state = :state', { email, state: States.Active })
       .getOne()
 

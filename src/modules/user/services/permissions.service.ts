@@ -5,7 +5,7 @@ import { Repository } from "typeorm";
 import { Client } from "../../../entities/users/client.entity";
 import { UserRole } from "../../../entities/users/userRole.entity";
 import { UserPermission } from "../../../entities/users/userPermission.entity";
-import { States } from "src/entities/enums/states.enum";
+import { States } from "../../../entities/enums/states.enum";
 
 @Injectable()
 export class PermissionsService {
@@ -26,14 +26,14 @@ export class PermissionsService {
       return { roles: ['client'], state: client.state }
 
     let roles: any = await this.userRolRepository.createQueryBuilder('roles')
-      .innerJoin('roles.user', 'user', 'user.state = :stat', { stat: States.Active })
+      .innerJoin('roles.user', 'user', 'user.state = :stat AND user.id = :id', { stat: States.Active, id })
       .innerJoinAndSelect('roles.role', 'role')
       .where('roles.state = :state' , { state: States.Active })
       .getMany()
 
 
     let permissions: any = await this.userPermissionRepository.createQueryBuilder('permissions')
-      .innerJoin('permissions.user', 'user', 'user.state = :stat', { stat: States.Active })
+      .innerJoin('permissions.user', 'user', 'user.state = :stat  AND user.id = :id', { stat: States.Active, id })
       .innerJoinAndSelect('permissions.permission', 'permission', 'permission.state = :stat', { stat: States.Active })
       .where('permissions.state = :state', { state: States.Active })
       .getMany()
