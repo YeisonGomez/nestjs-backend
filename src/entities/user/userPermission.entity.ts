@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { States } from '../enums/states.enum'
+import { State } from '../enums/states.enum'
 import { User } from "./user.entity";
 import { Permission } from "./permission.entity";
 
@@ -10,8 +10,8 @@ export class UserPermission {
   @PrimaryGeneratedColumn({ type: "bigint" })
   id: number;
 
-  @Column({ type: "enum", enum: States, default: States.Active })
-  state: States;
+  @Column({ type: "enum", enum: State, default: State.Active })
+  state: State;
 
   @ManyToOne(
     type => User, 

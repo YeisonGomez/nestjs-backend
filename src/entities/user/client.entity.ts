@@ -7,7 +7,7 @@ import {
 } from "typeorm";
 
 import { User } from "./user.entity";
-import { States } from "../enums/states.enum";
+import { StateOnboarding } from "../enums/states.enum";
 
 @Entity("client", { schema: 'user' })
 export class Client {
@@ -15,8 +15,8 @@ export class Client {
   @PrimaryGeneratedColumn({ type: "bigint" })
   id: number;
 
-  @Column("enum", { enum: States, default: States.Pending })
-  state: States;
+  @Column("enum", { enum: StateOnboarding, default: StateOnboarding.Pending })
+  state: StateOnboarding;
 
   @Column("character varying", { nullable: true })
   city: string;

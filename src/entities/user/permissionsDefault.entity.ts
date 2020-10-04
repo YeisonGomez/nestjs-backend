@@ -2,7 +2,7 @@ import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Column } from "t
 
 import { Role } from "./role.entity";
 import { Permission } from "./permission.entity";
-import { States } from "../enums/states.enum";
+import { State } from "../enums/states.enum";
 
 @Entity("permission_default", { schema: "user" })
 export class PermissionDefault {
@@ -10,8 +10,8 @@ export class PermissionDefault {
   @PrimaryGeneratedColumn({ type: "bigint" })
   id: number;
 
-  @Column("enum", { enum: States, default: States.Active })
-  state: States
+  @Column("enum", { enum: State, default: State.Active })
+  state: State
 
   @ManyToOne(
     type => Role,

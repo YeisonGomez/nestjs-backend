@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-import { States } from "../enums/states.enum";
+import { State } from "../enums/states.enum";
 import { User } from "./user.entity";
 
 @Entity("language", { schema: "user" })
@@ -15,8 +15,8 @@ export class Language {
   @Column("character varying", { nullable: true, length: 50 })
   key: string;
 
-  @Column("enum", { enum: States, default: States.Active })
-  state: States
+  @Column("enum", { enum: State, default: State.Active })
+  state: State
 
   @OneToMany(type => User, user => user.language)
   user: User[];

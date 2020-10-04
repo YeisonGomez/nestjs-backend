@@ -13,7 +13,7 @@ import { Person } from "./person.entity";
 import { Client } from "./client.entity";
 import { UserRole } from "./userRole.entity";
 import { UserPermission } from "./userPermission.entity";
-import { States } from "../enums/states.enum";
+import { State } from "../enums/states.enum";
 import { Language } from "./language.entity";
 
 @Entity("user", { schema: 'user' })
@@ -29,8 +29,8 @@ export class User {
   @Column("character varying", { length: 250 })
   password: string;
 
-  @Column("enum", { enum: States, default: States.Active })
-  state: States;
+  @Column("enum", { enum: State, default: State.Active })
+  state: State;
 
   @Column("character varying", { nullable: true, length: 100 })
   code: string;

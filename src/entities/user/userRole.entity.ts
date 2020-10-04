@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "t
 
 import { User } from "./user.entity";
 import { Role } from "./role.entity";
-import { States } from '../enums/states.enum'
+import { State } from '../enums/states.enum'
 
 @Entity("user_role", { schema: "user" })
 export class UserRole {
@@ -10,8 +10,8 @@ export class UserRole {
   @PrimaryGeneratedColumn({ type: "bigint" })
   id: number;
 
-  @Column({ type: "enum", enum: States, default: States.Active })
-  state: States;
+  @Column({ type: "enum", enum: State, default: State.Active })
+  state: State;
 
   @ManyToOne(
     type => User, 

@@ -1,5 +1,9 @@
-export enum States {
+export enum State {
   Active = "active",
-  Inactive = "inactive",
+  Inactive = "inactive"
+}
+
+export enum StateOnboarding {
+  Active = "active",
   Pending = "paid_pending"
 }
