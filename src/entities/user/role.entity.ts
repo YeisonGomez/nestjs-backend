@@ -3,7 +3,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from "typeo
 import { UserRole } from "./userRole.entity";
 import { States } from "../enums/states.enum";
 
-@Entity("role", { schema: "users" })
+@Entity("role", { schema: "user" })
 @Unique(["key"])
 export class Role {
 

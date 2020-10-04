@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Language } from '../../entities/users/language.entity';
+import { Language } from '../../entities/user/language.entity';
 
 const LANGUAGES = [
   { key: 'es', name: 'Español' },
@@ -10,7 +10,7 @@ const LANGUAGES = [
 
 export class LanguageDatabaseDefault {
   constructor(
-    @InjectRepository(Language, 'users') 
+    @InjectRepository(Language, 'user') 
     private readonly repository: Repository<Language>
   ) {
     LANGUAGES.map(language => this.create(language))

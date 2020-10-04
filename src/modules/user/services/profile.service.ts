@@ -2,19 +2,19 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { User } from "../../../entities/users/user.entity";
+import { User } from "../../../entities/user/user.entity";
 import { UpdateProfile } from "../dto/updateProfile.dto";
-import { Language } from "src/entities/users/language.entity";
-import { Person } from "src/entities/users/person.entity";
-import { Client } from "src/entities/users/client.entity";
+import { Language } from "src/entities/user/language.entity";
+import { Person } from "src/entities/user/person.entity";
+import { Client } from "src/entities/user/client.entity";
 
 @Injectable()
 export class ProfileService {
   constructor(
-    @InjectRepository(User, 'users') private readonly userRepository: Repository<User>,
-    @InjectRepository(Language, 'users') private readonly languageRepository: Repository<Language>,
-    @InjectRepository(Person, 'users') private readonly personRepository: Repository<Person>,
-    @InjectRepository(Client, 'users') private readonly clientRepository: Repository<Client>
+    @InjectRepository(User, 'user') private readonly userRepository: Repository<User>,
+    @InjectRepository(Language, 'user') private readonly languageRepository: Repository<Language>,
+    @InjectRepository(Person, 'user') private readonly personRepository: Repository<Person>,
+    @InjectRepository(Client, 'user') private readonly clientRepository: Repository<Client>
   ){}
 
   async getProfile(id: number) {
@@ -37,7 +37,10 @@ export class ProfileService {
       select: ['id'],
       join: {
         alias: 'user',
-        innerJoinAndSelect: { person: 'user.person', client: 'user.client' }
+        innerJoinAndSelect: { 
+          person: 'user.person', 
+          client: 'user.client' 
+        }
       },
       where: { id }
     })
@@ -46,13 +49,15 @@ export class ProfileService {
       return { error: 'USER_INCORRECT', detail: 'No hay ningun usuario con ese parametro de busqueda.' }
 
     const newLanguage = await this.languageRepository.findOne({ key: body.language })
+    
+    await this.userRepository.update(user.id, { language: newLanguage });
 
     await this.personRepository.update(user.person.id, {
       name: body.name,
       lastname: body.lastname,
       phone: body.phone,
-      language: newLanguage
     });
+
 
     await this.clientRepository.update(user.client.id, {
       city: body.city,

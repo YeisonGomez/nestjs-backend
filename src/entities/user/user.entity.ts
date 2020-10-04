@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   Unique,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn, ManyToOne, JoinColumn
 } from "typeorm";
 
 import { Person } from "./person.entity";
@@ -14,8 +14,9 @@ import { Client } from "./client.entity";
 import { UserRole } from "./userRole.entity";
 import { UserPermission } from "./userPermission.entity";
 import { States } from "../enums/states.enum";
+import { Language } from "./language.entity";
 
-@Entity("user", { schema: 'users' })
+@Entity("user", { schema: 'user' })
 @Unique(["email"])
 export class User {
 
@@ -51,5 +52,13 @@ export class User {
 
   @OneToMany(type => UserPermission, userPermission => userPermission.user)
   permissions: UserPermission[];
+
+  @ManyToOne(
+    type => Language, 
+    language => language.id, 
+    { onDelete: 'CASCADE', onUpdate: 'CASCADE' }
+  )
+  @JoinColumn({ name: 'fk_language' })
+  language: Language;
 
 }

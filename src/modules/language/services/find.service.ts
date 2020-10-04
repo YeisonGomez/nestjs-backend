@@ -2,13 +2,13 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { Language } from "../../../entities/users/language.entity";
+import { Language } from "../../../entities/user/language.entity";
 import { States } from "../../../entities/enums/states.enum";
 
 @Injectable()
 export class FindService {
   constructor(
-    @InjectRepository(Language, 'users') 
+    @InjectRepository(Language, 'user') 
     private readonly languageRepository: Repository<Language>
   ) { }
 

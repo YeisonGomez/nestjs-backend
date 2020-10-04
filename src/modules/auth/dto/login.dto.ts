@@ -1,6 +1,6 @@
 import { Length, IsEmail } from 'class-validator';
 
-export class Login {
+export class LoginDTO {
 
   @IsEmail()
   email: string;

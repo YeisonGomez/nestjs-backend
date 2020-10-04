@@ -5,13 +5,13 @@ import { ConfigService } from '@nestjs/config';
 
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from '../../@common/strategys/jwt.strategy';
-import { User } from '../../entities/users/user.entity';
-import { Person } from '../../entities/users/person.entity';
-import { Client } from '../../entities/users/client.entity';
-import { Language } from '../../entities/users/language.entity';
-import { UserRole } from '../../entities/users/userRole.entity';
-import { UserPermission } from '../../entities/users/userPermission.entity';
-import { Role } from '../../entities/users/role.entity';
+import { User } from '../../entities/user/user.entity';
+import { Person } from '../../entities/user/person.entity';
+import { Client } from '../../entities/user/client.entity';
+import { Language } from '../../entities/user/language.entity';
+import { UserRole } from '../../entities/user/userRole.entity';
+import { UserPermission } from '../../entities/user/userPermission.entity';
+import { Role } from '../../entities/user/role.entity';
 import { SignUpService } from './services/signup.service';
 import { LoginService } from './services/login.service';
 import { RecoverPasswordService } from './services/recoverPassword.service';
@@ -26,7 +26,7 @@ import { RecoverPasswordService } from './services/recoverPassword.service';
       UserRole, 
       Role,
       UserPermission
-    ], 'users'),
+    ], 'user'),
     JwtModule.registerAsync({ 
       inject: [ConfigService], 
       useFactory: (configService: ConfigService) => ({

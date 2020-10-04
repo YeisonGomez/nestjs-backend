@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Role } from '../../entities/users/role.entity';
+import { Role } from '../../entities/user/role.entity';
 
 const ROLES = [
   { key: 'superadmin', name: 'Super administrador' },
@@ -13,7 +13,7 @@ const ROLES = [
 export class RolDatabaseDefault {
 
   constructor(
-    @InjectRepository(Role, 'users') 
+    @InjectRepository(Role, 'user') 
     private readonly repository: Repository<Role>
   ) {
     ROLES.map(role => this.create(role))

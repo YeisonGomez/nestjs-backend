@@ -16,7 +16,7 @@ export default registerAs('typeorm', () => {
   }
 
   return {
-    users: {
+    user: {
       ...configDefault,
     }
   }

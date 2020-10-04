@@ -4,7 +4,7 @@ import { Role } from "./role.entity";
 import { Permission } from "./permission.entity";
 import { States } from "../enums/states.enum";
 
-@Entity("permission_default", { schema: "users" })
+@Entity("permission_default", { schema: "user" })
 export class PermissionDefault {
 
   @PrimaryGeneratedColumn({ type: "bigint" })

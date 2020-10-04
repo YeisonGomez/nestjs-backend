@@ -9,7 +9,7 @@ import {
 import { User } from "./user.entity";
 import { States } from "../enums/states.enum";
 
-@Entity("client", { schema: 'users' })
+@Entity("client", { schema: 'user' })
 export class Client {
 
   @PrimaryGeneratedColumn({ type: "bigint" })

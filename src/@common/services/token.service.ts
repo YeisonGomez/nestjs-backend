@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { User } from "../../entities/users/user.entity";
+import { User } from "../../entities/user/user.entity";
 import { States } from "../../entities/enums/states.enum";
 import { TokenJwt } from "../strategys/jwt.strategy";
 import { PermissionsService } from "../../modules/user/services/permissions.service";
@@ -10,7 +10,7 @@ import { PermissionsService } from "../../modules/user/services/permissions.serv
 @Injectable()
 export class TokenService {
   constructor(
-    @InjectRepository(User, 'users') private readonly userRepository: Repository<User>,
+    @InjectRepository(User, 'user') private readonly userRepository: Repository<User>,
     private readonly permissionsService: PermissionsService
   ){}
 

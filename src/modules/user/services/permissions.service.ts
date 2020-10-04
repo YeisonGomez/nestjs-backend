@@ -2,17 +2,17 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { Client } from "../../../entities/users/client.entity";
-import { UserRole } from "../../../entities/users/userRole.entity";
-import { UserPermission } from "../../../entities/users/userPermission.entity";
+import { Client } from "../../../entities/user/client.entity";
+import { UserRole } from "../../../entities/user/userRole.entity";
+import { UserPermission } from "../../../entities/user/userPermission.entity";
 import { States } from "../../../entities/enums/states.enum";
 
 @Injectable()
 export class PermissionsService {
   constructor(
-    @InjectRepository(Client, 'users') private readonly clientRepository: Repository<Client>,
-    @InjectRepository(UserRole, 'users') private readonly userRolRepository: Repository<UserRole>,
-    @InjectRepository(UserPermission, 'users') private readonly userPermissionRepository: Repository<UserPermission>
+    @InjectRepository(Client, 'user') private readonly clientRepository: Repository<Client>,
+    @InjectRepository(UserRole, 'user') private readonly userRolRepository: Repository<UserRole>,
+    @InjectRepository(UserPermission, 'user') private readonly userPermissionRepository: Repository<UserPermission>
   ){}
 
   async getPermissions(id: number) {

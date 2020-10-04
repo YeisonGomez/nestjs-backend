@@ -17,13 +17,13 @@ import gcsConfig from './@common/config/gcs.config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env.example',
+      envFilePath: '.env',
       load: [appConfig, sendgridConfig, typeormConfig, gcsConfig]
     }),
     TypeOrmModule.forRootAsync({
       inject:[ConfigService],
-      useFactory: (configService: ConfigService) => configService.get('typeorm.users'),
-      name: 'users' 
+      useFactory: (configService: ConfigService) => configService.get('typeorm.user'),
+      name: 'user' 
     }),
     CommonModule,
     AuthModule,

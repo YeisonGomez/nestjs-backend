@@ -4,10 +4,10 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { CryptoService } from './services/crypto.service';
 import { SengridService } from "./services/sendgrid.service";
 
-import { Permission } from "../entities/users/permission.entity";
-import { Role } from "../entities/users/role.entity";
-import { Language } from "../entities/users/language.entity";
-import { User } from "../entities/users/user.entity";
+import { Permission } from "../entities/user/permission.entity";
+import { Role } from "../entities/user/role.entity";
+import { Language } from "../entities/user/language.entity";
+import { User } from "../entities/user/user.entity";
 import { PermissionDatabaseDefault } from "./database/permission.default";
 import { RolDatabaseDefault } from "./database/role.default";
 import { LanguageDatabaseDefault } from "./database/language.default";
@@ -17,7 +17,7 @@ import { UserModule } from "../modules/user/user.module";
 @Global()
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Permission, Role, Language], 'users'),
+    TypeOrmModule.forFeature([User, Permission, Role, Language], 'user'),
     UserModule
   ],
   providers: [

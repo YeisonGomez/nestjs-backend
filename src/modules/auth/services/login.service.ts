@@ -2,19 +2,19 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { User } from "../../../entities/users/user.entity";
+import { User } from "../../../entities/user/user.entity";
 import { TokenService } from "../../../@common/services/token.service";
-import { Login } from "../dto/login.dto";
+import { LoginDTO } from "../dto/login.dto";
 import { States } from "../../../entities/enums/states.enum";
 
 @Injectable()
 export class LoginService {
   constructor(
-    @InjectRepository(User, 'users') private readonly userRepository: Repository<User>,
+    @InjectRepository(User, 'user') private readonly userRepository: Repository<User>,
     private readonly tokenService: TokenService,
   ){}
 
-  async login(body: Login) {
+  async login(body: LoginDTO) {
     const user = await this.userRepository.findOne({ select: ["id", "email", "state"], relations: ["client"], where: body });
 
     if (!user)

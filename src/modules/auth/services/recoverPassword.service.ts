@@ -3,22 +3,22 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
 
-import { User } from "../../../entities/users/user.entity";
-import { ChangePassword } from "../dto/changePassword.dto";
+import { User } from "../../../entities/user/user.entity";
+import { ChangePasswordDTO } from "../dto/changePassword.dto";
 import { States } from "../../../entities/enums/states.enum";
 
 @Injectable()
 export class RecoverPasswordService {
   constructor(
-    @InjectRepository(User, 'users') private readonly userRepository: Repository<User>,
+    @InjectRepository(User, 'user') private readonly userRepository: Repository<User>,
     @Inject('CryptoService') private cryptoService
   ){}
 
   async requestForgotPassword(email: string) {
     const user = await this.userRepository.findOne({ 
       select: ['id'],
-      relations: ['person', 'person.language'],
-      where: { email: email } 
+      relations: ['person', 'language'],
+      where: { email } 
     });
 
     if (!user)
@@ -30,10 +30,10 @@ export class RecoverPasswordService {
     const checkCode = randomStringGenerator();
     await this.userRepository.update({ id: user.id }, { code: checkCode })
 
-    return { success: 'OK', payload: { ...user.person, code: checkCode, lng: user.person.language.key } }
+    return { success: 'OK', payload: { ...user.person, code: checkCode, lng: user.language.key } }
   }
 
-  async changePassword(body: ChangePassword) {
+  async changePassword(body: ChangePasswordDTO) {
     const user = await this.userRepository.findOne({ where: { code: body.code } });
 
     if (!user)

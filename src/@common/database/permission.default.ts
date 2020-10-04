@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Permission } from '../../entities/users/permission.entity';
+import { Permission } from '../../entities/user/permission.entity';
 
 const PERMISSIONS = [
   { key: 'admin_users', name: 'Administrar usuarios' }
@@ -9,7 +9,7 @@ const PERMISSIONS = [
 
 export class PermissionDatabaseDefault {
   constructor(
-    @InjectRepository(Permission, 'users') 
+    @InjectRepository(Permission, 'user') 
     private readonly repository: Repository<Permission>
   ) {
     PERMISSIONS.map(permission => this.create(permission))

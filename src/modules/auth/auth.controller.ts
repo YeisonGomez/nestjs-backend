@@ -13,10 +13,11 @@ import { Templates, SengridService } from '../../@common/services/sendgrid.servi
 import { SignUpService } from './services/signup.service';
 import { LoginService } from './services/login.service';
 import { RecoverPasswordService } from './services/recoverPassword.service';
-import { Signup } from './dto/signup.dto';
-import { Login } from './dto/login.dto';
-import { Email } from './dto/email.dto';
-import { ChangePassword } from './dto/changePassword.dto';
+import { SignupDTO } from './dto/signup.dto';
+import { LoginDTO } from './dto/login.dto';
+import { EmailDTO } from './dto/email.dto';
+import { ChangePasswordDTO } from './dto/changePassword.dto';
+import { ResponseError, ResponseSuccess } from '../../@common/interfaces/response';
 
 @Controller('auth')
 export class AuthController {
@@ -32,7 +33,7 @@ export class AuthController {
   ) { }
 
   @Post('/signup')
-  async signup(@Body() body: Signup) {
+  async signup(@Body() body: SignupDTO): Promise<ResponseSuccess | ResponseError> {
     body.email = body.email.toLowerCase()
     body.password = this.cryptoService.encrypt(body.password);
     const response: any = await this.signupService.signup(body);
@@ -47,11 +48,11 @@ export class AuthController {
         redirect: this.configService.get('app.appHostClient')
       })
 
-    return { success: 'OK', token: await this.jwtService.sign({ ...response }) }
+    return { success: 'OK', payload: await this.jwtService.sign({ ...response }) }
   }
 
   @Post('/login')
-  async login(@Body() body: Login) {
+  async login(@Body() body: LoginDTO): Promise<ResponseSuccess | ResponseError> {
     body.email = body.email.toLowerCase()
     body.password = this.cryptoService.encrypt(body.password);
     const response: any = await this.loginService.login(body);
@@ -59,11 +60,11 @@ export class AuthController {
     if (response.error)
       throw new UnauthorizedException(response);
 
-    return { success: 'OK', token: await this.jwtService.sign({ ...response }) }
+    return { success: 'OK', payload: await this.jwtService.sign({ ...response }) }
   }
 
   @Post('/request-forgot-password')
-  async requestForgotPassword(@Body() body: Email) {
+  async requestForgotPassword(@Body() body: EmailDTO): Promise<ResponseSuccess | ResponseError> {
     body.email = body.email.toLowerCase()
     const response: any = await this.recoverPasswordService.requestForgotPassword(body.email);
 
@@ -78,7 +79,7 @@ export class AuthController {
       })
 
       if (sendEmail.error)
-        return { error: 'ERROR_SEND_EMAIL', detail: 'Ocurrio un problema al enviar el email' }
+        return { error: 'ERROR_SEND_EMAIL', message: 'Ocurrio un problema al enviar el email' }
 
       return { success: 'OK' }
     } else
@@ -86,7 +87,7 @@ export class AuthController {
   }
 
   @Post('/forgot-password')
-  async changePassword(@Body() body: ChangePassword) {
+  async changePassword(@Body() body: ChangePasswordDTO): Promise<ResponseSuccess | ResponseError> {
     const response: any = await this.recoverPasswordService.changePassword(body);
 
     if (response.success) {

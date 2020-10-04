@@ -1,11 +1,11 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { States } from '../enums/states.enum'
 import { User } from "./user.entity";
-import { Permission } from "./permission.entity";
+import { Role } from "./role.entity";
+import { States } from '../enums/states.enum'
 
-@Entity("user_permission", { schema: "users" })
-export class UserPermission {
+@Entity("user_role", { schema: "user" })
+export class UserRole {
 
   @PrimaryGeneratedColumn({ type: "bigint" })
   id: number;
@@ -22,10 +22,10 @@ export class UserPermission {
   user: User;
 
   @ManyToOne(
-    type => Permission, 
-    permission => permission.id, 
+    type => Role, 
+    role => role.id, 
     { onDelete: 'CASCADE', onUpdate: 'CASCADE' }
   )
-  @JoinColumn({ name: 'fk_permission' })
-  permission: Permission;
+  @JoinColumn({ name: 'fk_role' })
+  role: Role;
 }

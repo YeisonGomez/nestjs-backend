@@ -1,9 +1,8 @@
-import { Column, Entity, JoinColumn, PrimaryGeneratedColumn, ManyToOne, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, PrimaryGeneratedColumn, OneToOne } from "typeorm";
 
 import { User } from "./user.entity";
-import { Language } from "./language.entity";
 
-@Entity("person", { schema: 'users' })
+@Entity("person", { schema: 'user' })
 export class Person {
 
   @PrimaryGeneratedColumn({ type: "bigint" })
@@ -25,13 +24,5 @@ export class Person {
   )
   @JoinColumn({ name: 'fk_user' })
   user: Person;
-
-  @ManyToOne(
-    type => Language, 
-    language => language.id, 
-    { onDelete: 'CASCADE', onUpdate: 'CASCADE' }
-  )
-  @JoinColumn({ name: 'fk_language' })
-  language: Language;
 
 }

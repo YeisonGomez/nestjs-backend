@@ -1,9 +1,9 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-import { Person } from "./person.entity";
 import { States } from "../enums/states.enum";
+import { User } from "./user.entity";
 
-@Entity("language", { schema: "users" })
+@Entity("language", { schema: "user" })
 export class Language {
 
   @PrimaryGeneratedColumn({ type: "bigint" })
@@ -18,6 +18,6 @@ export class Language {
   @Column("enum", { enum: States, default: States.Active })
   state: States
 
-  @OneToMany(type => Person, person => person.language)
-  persons: Person[];
+  @OneToMany(type => User, user => user.language)
+  user: User[];
 }
