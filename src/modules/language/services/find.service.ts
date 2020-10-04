@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { Language } from "../../../entities/user/language.entity";
-import { States } from "../../../entities/enums/states.enum";
+import { State } from "../../../entities/enums/states.enum";
 
 @Injectable()
 export class FindService {
@@ -16,7 +16,7 @@ export class FindService {
     return await this.languageRepository.find({
       select: ["id", "name", "key"],
       order: { id: "ASC" },
-      where: { state: States.Active }
+      where: { state: State.Active }
     })
   }
 }

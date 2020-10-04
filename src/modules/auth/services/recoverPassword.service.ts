@@ -5,7 +5,7 @@ import { randomStringGenerator } from '@nestjs/common/utils/random-string-genera
 
 import { User } from "../../../entities/user/user.entity";
 import { ChangePasswordDTO } from "../dto/changePassword.dto";
-import { States } from "../../../entities/enums/states.enum";
+import { State } from "../../../entities/enums/states.enum";
 
 @Injectable()
 export class RecoverPasswordService {
@@ -24,7 +24,7 @@ export class RecoverPasswordService {
     if (!user)
       return { error: 'USER_NOT_EXIST', detail: 'El usuario no existe' }
 
-    if (user.state === States.Inactive)
+    if (user.state === State.Inactive)
       return { error: 'USER_INACTIVE', detail: 'El usuario esta inactivo' }
 
     const checkCode = randomStringGenerator();
@@ -39,7 +39,7 @@ export class RecoverPasswordService {
     if (!user)
       return { error: 'CODE_ERROR', detail: 'El código no coincide con ningún usuario.' }
 
-    if (user.state === States.Inactive)
+    if (user.state === State.Inactive)
       return { error: 'USER_INACTIVE', detail: 'El usuario esta inactivo.' }
 
     body.password = this.cryptoService.encrypt(body.password);

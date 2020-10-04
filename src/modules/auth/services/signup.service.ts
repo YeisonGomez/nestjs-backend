@@ -6,7 +6,7 @@ import { User } from "../../../entities/user/user.entity";
 import { Language } from "../../../entities/user/language.entity";
 import { Person } from "../../../entities/user/person.entity";
 import { Client } from "../../../entities/user/client.entity";
-import { TokenService } from "../../../@common/services/token.service";
+import { TokenService } from "./token.service";
 import { SignupDTO } from "../dto/signup.dto";
 
 @Injectable()

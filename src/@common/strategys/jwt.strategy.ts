@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { TokenService } from '../services/token.service'
+import { TokenService } from '../../modules/auth/services/token.service'
 
 export interface TokenJwt {
   id: number,

@@ -5,5 +5,6 @@ export enum State {
 
 export enum StateOnboarding {
   Active = "active",
+  Inactive = "inactive",
   Pending = "paid_pending"
 }

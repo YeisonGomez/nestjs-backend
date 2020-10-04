@@ -3,9 +3,9 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { User } from "../../../entities/user/user.entity";
-import { TokenService } from "../../../@common/services/token.service";
+import { TokenService } from "./token.service";
 import { LoginDTO } from "../dto/login.dto";
-import { States } from "../../../entities/enums/states.enum";
+import { State, StateOnboarding } from "../../../entities/enums/states.enum";
 
 @Injectable()
 export class LoginService {
@@ -21,9 +21,9 @@ export class LoginService {
       return { error: "USER_NOT_EXIST", detail: "Tu correo electronico o contraseña no son válidos." }
     else if(!user.client)
       return { error: "IS_NOT_CLIENT", detail: "Este usuario no es un cliente." }
-    else if(user.client.state === States.Inactive)
+    else if(user.client.state === StateOnboarding.Inactive)
       return { error: "CLIENT_INACTIVE", detail: "Cliente inactivo." }
-    else if (user.state === States.Inactive)
+    else if (user.state === State.Inactive)
       return { error: "USER_INACTIVE", detail: "Usuario inactivo." }
 
     return await this.tokenService.serializeToken(user.email);
