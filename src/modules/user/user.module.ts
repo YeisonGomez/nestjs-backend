@@ -11,6 +11,7 @@ import { UserPermission } from '../../entities/user/userPermission.entity';
 import { FindService } from './services/find.service';
 import { PermissionsService } from './services/permissions.service';
 import { ProfileService } from './services/profile.service';
+import { TokenService } from '../auth/services/token.service';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { ProfileService } from './services/profile.service';
   providers: [
     FindService,
     PermissionsService,
-    ProfileService
+    ProfileService,
+    TokenService
   ],
   exports: [PermissionsService]
 })

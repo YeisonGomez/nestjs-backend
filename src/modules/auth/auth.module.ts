@@ -3,8 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
-import { AuthController } from './auth.controller';
 import { JwtStrategy } from '../../@common/strategys/jwt.strategy';
+import { AuthController } from './auth.controller';
 import { User } from '../../entities/user/user.entity';
 import { Person } from '../../entities/user/person.entity';
 import { Client } from '../../entities/user/client.entity';
@@ -14,7 +14,9 @@ import { UserPermission } from '../../entities/user/userPermission.entity';
 import { Role } from '../../entities/user/role.entity';
 import { SignUpService } from './services/signup.service';
 import { LoginService } from './services/login.service';
+import { TokenService } from './services/token.service';
 import { RecoverPasswordService } from './services/recoverPassword.service';
+import { PermissionsService } from '../user/services/permissions.service'
 
 @Module({
   imports: [
@@ -41,6 +43,8 @@ import { RecoverPasswordService } from './services/recoverPassword.service';
     SignUpService,
     LoginService,
     RecoverPasswordService, 
+    TokenService,
+    PermissionsService
   ]
 })
 export class AuthModule { }
