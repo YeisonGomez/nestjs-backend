@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
@@ -24,6 +24,13 @@ import gcsConfig from './@common/config/gcs.config';
       inject:[ConfigService],
       useFactory: (configService: ConfigService) => configService.get('typeorm.user'),
       name: 'user' 
+    }),
+    CacheModule.register({
+      useFactory: async (configService: ConfigService) => ({
+        ttl: configService.get('cache.ttl'),
+        max: configService.get('cache.max'),
+      }),
+      inject: [ConfigService],
     }),
     CommonModule,
     AuthModule,
