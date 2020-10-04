@@ -9,7 +9,8 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
-import { Templates, SengridService } from '../../@common/services/sendgrid.service';
+import { SengridService } from '../../@common/services/sendgrid/sendgrid.service';
+import { Templates } from '../../@common/services/sendgrid/templates.constanst';
 import { SignUpService } from './services/signup.service';
 import { LoginService } from './services/login.service';
 import { RecoverPasswordService } from './services/recoverPassword.service';

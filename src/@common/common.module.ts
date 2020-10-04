@@ -2,8 +2,7 @@ import { Module, Global } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { CryptoService } from './services/crypto.service';
-import { SengridService } from "./services/sendgrid.service";
-
+import { SengridService } from "./services/sendgrid/sendgrid.service";
 import { Permission } from "../entities/user/permission.entity";
 import { Role } from "../entities/user/role.entity";
 import { Language } from "../entities/user/language.entity";
