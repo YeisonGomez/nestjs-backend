@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config'
+import * as helmet from 'helmet';
 
 import { AppModule } from './app.module';
 
@@ -10,6 +11,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService)
   const { appPort, appHostServer, appPrefix } = configService.get('app')
 
+  app.use(helmet());
   app.setGlobalPrefix(appPrefix);
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
