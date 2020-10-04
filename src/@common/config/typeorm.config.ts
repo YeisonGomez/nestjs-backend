@@ -11,8 +11,7 @@ export default registerAs('typeorm', () => {
     database: process.env.DB_DATABASE,
     synchronize: true,
     logging: false,
-    entities: ['dist/entities/**/*entity.js']
-    //entities: [(process.env.NODE_ENV === 'local' ? 'src/entities/**/*.ts' : 'dist/entities/**/*.js' )]
+    entities: ['dist/entities/**/*.entity.js']
   }
 
   return {

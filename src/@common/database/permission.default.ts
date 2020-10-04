@@ -2,9 +2,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Permission } from '../../entities/user/permission.entity';
+import { Permissions } from '../constants/permission.constant'
 
 const PERMISSIONS = [
-  { key: 'admin_users', name: 'Administrar usuarios' }
+  { key: Permissions.ADMIN_USERS, name: 'Administrar usuarios' }
 ]
 
 export class PermissionDatabaseDefault {

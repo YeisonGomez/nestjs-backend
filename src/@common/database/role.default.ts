@@ -2,12 +2,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Role } from '../../entities/user/role.entity';
+import { Roles } from '../constants/role.constant'
 
 const ROLES = [
-  { key: 'superadmin', name: 'Super administrador' },
-  { key: 'admin', name: 'Administrador' },
-  { key: 'client', name: 'Cliente' },
-  { key: 'general', name: 'General' }
+  { key: Roles.SUPERADMIN, name: 'Super administrador' },
+  { key: Roles.ADMIN, name: 'Administrador' },
+  { key: Roles.CLIENT, name: 'Cliente' }
 ]
 
 export class RolDatabaseDefault {

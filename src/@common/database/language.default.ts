@@ -2,10 +2,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Language } from '../../entities/user/language.entity';
+import { Languages } from '../constants/language.constant'
 
 const LANGUAGES = [
-  { key: 'es', name: 'Español' },
-  { key: 'en', name: 'Ingles' }
+  { key: Languages.SPANISH, name: 'Español' },
+  { key: Languages.ENGLISH, name: 'Ingles' }
 ]
 
 export class LanguageDatabaseDefault {
